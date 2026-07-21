@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ATT&CK Threat Mapper — response contract",
+  "description": "Output contract for the /attack-mapper route. Model output that fails this shape is rejected rather than rendered.",
+  "type": "object",
+  "required": ["risk_tier", "threat_profile_summary", "attack_techniques"],
+  "additionalProperties": false,
+  "properties": {
+    "risk_tier": {
+      "type": "string",
+      "enum": ["Critical", "High", "Elevated", "Moderate"],
+      "description": "Drives the styled banner in the rendered report."
+    },
+    "threat_profile_summary": {
+      "type": "string",
+      "maxLength": 900
+    },
+    "top_threat_actors": {
+      "type": "array",
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "required": ["name", "motivation", "relevance"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string", "maxLength": 120 },
+          "motivation": { "type": "string", "maxLength": 80 },
+          "relevance": { "type": "string", "maxLength": 400 }
+        }
+      }
+    },
+    "attack_techniques": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 8,
+      "description": "Bounded at 8 to keep the response inside the 3000-token budget. Exceeding the budget risks mid-object truncation and unparseable JSON.",
+      "items": {
+        "type": "object",
+        "required": ["technique_id", "technique_name", "tactic", "likelihood", "description", "mitigation"],
+        "additionalProperties": false,
+        "properties": {
+          "technique_id": {
+            "type": "string",
+            "pattern": "^T[0-9]{4}(\\.[0-9]{3})?$",
+            "description": "MITRE ATT&CK technique or sub-technique ID."
+          },
+          "technique_name": { "type": "string", "maxLength": 140 },
+          "tactic": { "type": "string", "maxLength": 60 },
+          "likelihood": {
+            "type": "string",
+            "enum": ["high", "medium", "low"]
+          },
+          "description": { "type": "string", "maxLength": 500 },
+          "detection_query": {
+            "type": "string",
+            "maxLength": 900,
+            "description": "KQL for Microsoft Sentinel. Rendered inside an escaped code block — never inserted as raw markup."
+          },
+          "mitigation": { "type": "string", "maxLength": 300 }
+        }
+      }
+    },
+    "detection_gaps": {
+      "type": "array",
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "required": ["gap", "risk", "tool_to_fix"],
+        "additionalProperties": false,
+        "properties": {
+          "gap": { "type": "string", "maxLength": 160 },
+          "risk": { "type": "string", "maxLength": 400 },
+          "tool_to_fix": { "type": "string", "maxLength": 160 }
+        }
+      }
+    },
+    "priority_detections": {
+      "type": "array",
+      "maxItems": 5,
+      "items": { "type": "string", "maxLength": 220 }
+    }
+  }
+}
