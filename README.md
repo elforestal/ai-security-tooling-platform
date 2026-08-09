@@ -14,7 +14,6 @@
 ---
 
 ## What This Is
-
 A serverless platform I designed, built, and operate that converts unstructured security
 input — suspicious emails, KQL queries, raw logs, Conditional Access policies, GenAI usage
 policies — into structured, schema-validated security analysis.
@@ -27,8 +26,9 @@ the edge, and analysis results are not persisted.
 model.** Production system prompts are proprietary and excluded; a sanitized reference
 Worker is included in [`example-worker/`](example-worker/).
 
-## Why It Exists
+🔗 **[Try the live tools →](https://forestalsecurity.com/free-tools/)**
 
+## Why It Exists
 Small and mid-sized businesses face the same threat landscape as enterprises without the
 security team to match. These tools compress analysis that would otherwise require a
 consultant engagement — phishing triage, M365 posture assessment, ATT&CK mapping,
